@@ -44,11 +44,11 @@ const userSchema = new mongoose.Schema(
     additionalDetails: {
       type: mongoose.Schema.Types.ObjectId,
       required: true,
-      ref: "Profile",
+      ref: "Profile", // id store
     },
     courses: [
       {
-        type: mongoose.Schema.Types.ObjectId,
+        type: mongoose.Schema.Types.ObjectId, //course id
         ref: "Course",
       },
     ],

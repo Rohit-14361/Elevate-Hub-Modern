@@ -5,7 +5,7 @@ const coursesSchema = new mongoose.Schema({
   courseName: { type: String },
   courseDescription: { type: String },
   instructor: {
-    type: mongoose.Schema.Types.ObjectId,
+    type: mongoose.Schema.Types.ObjectId, // intructor id store
     required: true,
     ref: "user",
   },
@@ -14,13 +14,13 @@ const coursesSchema = new mongoose.Schema({
   },
   courseContent: [
     {
-      type: mongoose.Schema.Types.ObjectId,
+      type: mongoose.Schema.Types.ObjectId, //course content
       ref: "Section",
     },
   ],
   ratingAndReviews: [
     {
-      type: mongoose.Schema.Types.ObjectId,
+      type: mongoose.Schema.Types.ObjectId, //
       ref: "RatingAndReview",
     },
   ],

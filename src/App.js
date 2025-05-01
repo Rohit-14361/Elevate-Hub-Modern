@@ -27,6 +27,7 @@ import EditCourse from "./components/core/Dashboard/EditCourse";
 import Catalog from "./pages/Catalog";
 import CourseDetails from "./pages/CourseDetails";
 import ViewCourse from "./pages/ViewCourse";
+// import UpdatePassword from "./pages/UpdatePassword";
 import VideoDetails from "./components/core/ViewCourse/VideoDetails";
 import Instructor from "./components/core/Dashboard/InstructorDashboard/Instructor";
 
@@ -45,7 +46,7 @@ function App() {
         <Route path="courses/:courseId" element={<CourseDetails />} />
 
         <Route
-          path="signup"
+          path="/signup"
           element={
             <OpenRoute>
               <Signup />
@@ -53,7 +54,7 @@ function App() {
           }
         />
         <Route
-          path="login"
+          path="/login"
           element={
             <OpenRoute>
               <Login />
@@ -62,10 +63,18 @@ function App() {
         />
 
         <Route
-          path="forgot-password"
+          path="/forgot-password"
           element={
             <OpenRoute>
               <ForgotPassword />
+            </OpenRoute>
+          }
+        />
+        <Route
+          path="/update-password/:id"
+          element={
+            <OpenRoute>
+              <UpdatePassword />
             </OpenRoute>
           }
         />
@@ -75,15 +84,6 @@ function App() {
           element={
             <OpenRoute>
               <VerifyEmail />
-            </OpenRoute>
-          }
-        />
-
-        <Route
-          path="update-password/:id"
-          element={
-            <OpenRoute>
-              <UpdatePassword />
             </OpenRoute>
           }
         />

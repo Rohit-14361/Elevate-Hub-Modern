@@ -68,7 +68,7 @@ const otpTemplate = (otp) => {
 	
 	<body>
 		<div class="container">
-			<a href="https://studynotion-edtech-project.vercel.app"><p class="ele">Elevate Hub</p></a>
+			<p class="ele">Elevate Hub</p>
 			<div class="message">OTP Verification Email</div>
 			<div class="body">
 				<p>Dear User,</p>

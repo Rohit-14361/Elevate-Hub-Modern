@@ -40,8 +40,8 @@ exports.updateProfile = async (req, res) => {
 
     // Find the updated user details
     const updatedUserDetails = await User.findById(id)
-      .populate("additionalDetails")
-      .exec();
+      .populate("additionalDetails") //sara info show krta hai backend mein in res
+      .exec(); //updated doc ko show krta hai
 
     return res.json({
       success: true,
@@ -75,7 +75,7 @@ exports.deleteAccount = async (req, res) => {
     for (const courseId of user.courses) {
       await Course.findByIdAndUpdate(
         courseId,
-        { $pull: { studentsEnroled: id } },
+        { $pull: { studentsEnroled: id } }, //$pull -->delete krne ka kaam krta hai
         { new: true }
       );
     }

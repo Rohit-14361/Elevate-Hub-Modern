@@ -86,6 +86,8 @@ exports.signup = async (req, res) => {
       about: null,
       contactNumber: null,
     });
+
+    // create user
     const user = await User.create({
       firstName,
       lastName,
@@ -139,6 +141,9 @@ exports.login = async (req, res) => {
       });
     }
 
+    // bcrypt.hash()
+
+    // bcrypt.compare()
     // Generate JWT token and Compare Password
     if (await bcrypt.compare(password, user.password)) {
       const token = jwt.sign(
