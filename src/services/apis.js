@@ -1,4 +1,4 @@
-const BASE_URL = "  "https://elevate-hub-modern-git-main-rohit-14361s-projects.vercel.app/api/v1";
+const BASE_URL ="https://elevate-hub-modern.onrender.com/api/v1";
 
 // AUTH ENDPOINTS
 export const endpoints = {
