@@ -23,7 +23,7 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(
   cors({
-    origin: "https://elevate-hub-modern.vercel.app/",
+    origin: "https://elevate-hub-modern-git-main-rohit-14361s-projects.vercel.app/",
     credentials: true,
   })
 );
