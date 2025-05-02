@@ -14,7 +14,7 @@ const fileUpload = require("express-fileupload");
 const dotenv = require("dotenv");
 
 dotenv.config();
-const PORT = process.env.PORT || 4000;
+const PORT = process.env.PORT;
 
 //database connect
 database.connect();
@@ -23,7 +23,7 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(
   cors({
-    origin: "http://localhost:3000",
+    origin: "https://elevate-hub-modern.vercel.app/",
     credentials: true,
   })
 );
