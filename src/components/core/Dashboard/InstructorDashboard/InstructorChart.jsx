@@ -84,7 +84,7 @@ export default function InstructorChart({ courses }) {
       </div>
       <div
         className="relative mx-auto aspect-square h-full w-full"
-        style={{ maxWidth: "600px", maxHeight: "600px" }}
+        style={{ maxWidth: "350px", maxHeight: "350px" }}
       >
         {/* Render the Pie chart based on the selected chart */}
         <Pie
