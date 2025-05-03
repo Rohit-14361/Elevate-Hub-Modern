@@ -23,6 +23,7 @@ function Navbar() {
   const [subLinks, setSubLinks] = useState([]);
   const [loading, setLoading] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isCatalogOpen, setIsCatalogOpen] = useState(false);
 
   useEffect(() => {
     (async () => {
@@ -43,6 +44,10 @@ function Navbar() {
 
   const toggleMenu = () => {
     setIsMenuOpen((prev) => !prev);
+  };
+
+  const toggleCatalog = () => {
+    setIsCatalogOpen((prev) => !prev);
   };
 
   return (
@@ -147,17 +152,24 @@ function Navbar() {
           {token !== null && <ProfileDropdown />}
         </div>
         {/* Hamburger menu button */}
-        <button
-          className="mr-4 md:hidden"
-          onClick={toggleMenu}
-          aria-label="Toggle menu"
-        >
-          {isMenuOpen ? (
-            <AiOutlineClose fontSize={24} fill="#AFB2BF" />
-          ) : (
+        {!isMenuOpen && (
+          <button
+            className="mr-4 md:hidden"
+            onClick={toggleMenu}
+            aria-label="Toggle menu"
+          >
             <AiOutlineMenu fontSize={24} fill="#AFB2BF" />
-          )}
-        </button>
+          </button>
+        )}
+        {isMenuOpen && (
+          <button
+            className="mr-4 md:hidden"
+            onClick={toggleMenu}
+            aria-label="Close menu"
+          >
+            <AiOutlineClose fontSize={24} fill="#AFB2BF" />
+          </button>
+        )}
       </div>
       {/* Mobile menu overlay */}
       {isMenuOpen && (
@@ -178,30 +190,44 @@ function Navbar() {
                 <li key={index}>
                   {link.title === "Catalog" ? (
                     <div>
-                      <p className="mb-2 font-semibold">{link.title}</p>
-                      <div className="flex flex-col gap-y-2 pl-4">
-                        {loading ? (
-                          <p>Loading...</p>
-                        ) : subLinks && subLinks.length ? (
-                          subLinks
-                            ?.filter((subLink) => subLink?.courses?.length > 0)
-                            ?.map((subLink, i) => (
-                              <Link
-                                key={i}
-                                to={`/catalog/${subLink.name
-                                  .split(" ")
-                                  .join("-")
-                                  .toLowerCase()}`}
-                                onClick={() => setIsMenuOpen(false)}
-                                className="rounded-lg bg-transparent py-2 pl-2 hover:bg-richblack-50 text-richblack-900"
-                              >
-                                {subLink.name}
-                              </Link>
-                            ))
-                        ) : (
-                          <p>No Courses Found</p>
-                        )}
-                      </div>
+                      <button
+                        onClick={toggleCatalog}
+                        className="mb-2 flex w-full items-center justify-between font-semibold text-richblack-25"
+                      >
+                        {link.title}
+                        <BsChevronDown
+                          className={`ml-2 transition-transform duration-300 ${
+                            isCatalogOpen ? "rotate-180" : "rotate-0"
+                          }`}
+                        />
+                      </button>
+                      {isCatalogOpen && (
+                        <div className="flex flex-col gap-y-2 pl-4">
+                          {loading ? (
+                            <p>Loading...</p>
+                          ) : subLinks && subLinks.length ? (
+                            subLinks
+                              ?.filter(
+                                (subLink) => subLink?.courses?.length > 0
+                              )
+                              ?.map((subLink, i) => (
+                                <Link
+                                  key={i}
+                                  to={`/catalog/${subLink.name
+                                    .split(" ")
+                                    .join("-")
+                                    .toLowerCase()}`}
+                                  onClick={() => setIsMenuOpen(false)}
+                                  className="rounded-lg bg-transparent py-2 pl-2 hover:bg-richblack-50 text-richblack-900"
+                                >
+                                  {subLink.name}
+                                </Link>
+                              ))
+                          ) : (
+                            <p>No Courses Found</p>
+                          )}
+                        </div>
+                      )}
                     </div>
                   ) : (
                     <Link
