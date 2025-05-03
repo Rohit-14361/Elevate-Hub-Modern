@@ -1,5 +1,9 @@
 import { useEffect, useState } from "react";
-import { AiOutlineMenu, AiOutlineShoppingCart } from "react-icons/ai";
+import {
+  AiOutlineMenu,
+  AiOutlineShoppingCart,
+  AiOutlineClose,
+} from "react-icons/ai";
 import { BsChevronDown } from "react-icons/bs";
 import { useSelector } from "react-redux";
 import { Link, matchPath, useLocation } from "react-router-dom";
@@ -18,6 +22,7 @@ function Navbar() {
 
   const [subLinks, setSubLinks] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   useEffect(() => {
     (async () => {
@@ -32,10 +37,12 @@ function Navbar() {
     })();
   }, []);
 
-  // console.log("sub links", subLinks)
-
   const matchRoute = (route) => {
     return matchPath({ path: route }, location.pathname);
+  };
+
+  const toggleMenu = () => {
+    setIsMenuOpen((prev) => !prev);
   };
 
   return (
@@ -139,10 +146,109 @@ function Navbar() {
           )}
           {token !== null && <ProfileDropdown />}
         </div>
-        <button className="mr-4 md:hidden">
-          <AiOutlineMenu fontSize={24} fill="#AFB2BF" />
+        {/* Hamburger menu button */}
+        <button
+          className="mr-4 md:hidden"
+          onClick={toggleMenu}
+          aria-label="Toggle menu"
+        >
+          {isMenuOpen ? (
+            <AiOutlineClose fontSize={24} fill="#AFB2BF" />
+          ) : (
+            <AiOutlineMenu fontSize={24} fill="#AFB2BF" />
+          )}
         </button>
       </div>
+      {/* Mobile menu overlay */}
+      {isMenuOpen && (
+        <div className="fixed inset-0 z-50 flex flex-col bg-richblack-900 p-6 md:hidden">
+          <div className="mb-6 flex justify-between">
+            <Link to="/" onClick={() => setIsMenuOpen(false)}>
+              <h1 className="font-bold text-2xl text-richblack-300">
+                Elevate Hub
+              </h1>
+            </Link>
+            <button onClick={toggleMenu} aria-label="Close menu">
+              <AiOutlineClose fontSize={24} fill="#AFB2BF" />
+            </button>
+          </div>
+          <nav>
+            <ul className="flex flex-col gap-y-4 text-richblack-25">
+              {NavbarLinks.map((link, index) => (
+                <li key={index}>
+                  {link.title === "Catalog" ? (
+                    <div>
+                      <p className="mb-2 font-semibold">{link.title}</p>
+                      <div className="flex flex-col gap-y-2 pl-4">
+                        {loading ? (
+                          <p>Loading...</p>
+                        ) : subLinks && subLinks.length ? (
+                          subLinks
+                            ?.filter((subLink) => subLink?.courses?.length > 0)
+                            ?.map((subLink, i) => (
+                              <Link
+                                key={i}
+                                to={`/catalog/${subLink.name
+                                  .split(" ")
+                                  .join("-")
+                                  .toLowerCase()}`}
+                                onClick={() => setIsMenuOpen(false)}
+                                className="rounded-lg bg-transparent py-2 pl-2 hover:bg-richblack-50 text-richblack-900"
+                              >
+                                {subLink.name}
+                              </Link>
+                            ))
+                        ) : (
+                          <p>No Courses Found</p>
+                        )}
+                      </div>
+                    </div>
+                  ) : (
+                    <Link
+                      to={link?.path}
+                      onClick={() => setIsMenuOpen(false)}
+                      className="text-richblack-25"
+                    >
+                      {link.title}
+                    </Link>
+                  )}
+                </li>
+              ))}
+            </ul>
+          </nav>
+          <div className="mt-auto flex flex-col gap-y-4">
+            {user && user?.accountType !== ACCOUNT_TYPE.INSTRUCTOR && (
+              <Link
+                to="/dashboard/cart"
+                className="relative"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                <AiOutlineShoppingCart className="text-2xl text-richblack-100" />
+                {totalItems > 0 && (
+                  <span className="absolute -bottom-2 -right-2 grid h-5 w-5 place-items-center overflow-hidden rounded-full bg-richblack-600 text-center text-xs font-bold text-yellow-100">
+                    {totalItems}
+                  </span>
+                )}
+              </Link>
+            )}
+            {token === null && (
+              <Link to="/login" onClick={() => setIsMenuOpen(false)}>
+                <button className="rounded-[8px] border border-richblack-700 bg-richblack-800 px-[12px] py-[8px] text-richblack-100">
+                  Log in
+                </button>
+              </Link>
+            )}
+            {token === null && (
+              <Link to="/signup" onClick={() => setIsMenuOpen(false)}>
+                <button className="rounded-[8px] border border-richblack-700 bg-richblack-800 px-[12px] py-[8px] text-richblack-100">
+                  Sign up
+                </button>
+              </Link>
+            )}
+            {token !== null && <ProfileDropdown />}
+          </div>
+        </div>
+      )}
     </div>
   );
 }
