@@ -103,7 +103,10 @@ function VerifyEmail() {
           </div>
         </div>
       )}
+
+      <p className="text-white text-xl font-semibold mt-4 ">Note: If you don't receive your OTP, kindly check the spam section of your email.</p>
     </div>
+    
   );
 }
 
