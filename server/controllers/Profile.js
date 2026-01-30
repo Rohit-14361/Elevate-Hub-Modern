@@ -17,6 +17,7 @@ exports.updateProfile = async (req, res) => {
       contactNumber = "",
       gender = "",
     } = req.body;
+    
     const id = req.user.id;
 
     // Find the profile by id

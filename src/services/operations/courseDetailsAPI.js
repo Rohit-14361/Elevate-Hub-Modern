@@ -398,14 +398,23 @@ export const enrollStudent = async (data, token) => {
     });
     console.log("ENROLL STUDENT API RESPONSE............", response);
     if (!response?.data?.success) {
-      throw new Error("Could Not Enroll Student");
+      throw new Error(response?.data?.message || "Could Not Enroll Student");
     }
     toast.success("Enrolled Successfully");
     success = true;
   } catch (error) {
     success = false;
     console.log("ENROLL STUDENT API ERROR............", error);
-    toast.error(error.message);
+
+    // Check if the error is because user is already .
+    const errorMessage = error?.response?.data?.message || error.message;
+    if (errorMessage?.includes("already enrolled")) {
+      console.log("User is already enrolled in this course");
+      // Don't show error toast for already enrolled case
+      success = true; // Consider it a success since they are enrolled
+    } else {
+      toast.error(errorMessage);
+    }
   }
   toast.dismiss(toastId);
   return success;

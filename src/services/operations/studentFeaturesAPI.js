@@ -63,10 +63,11 @@ export async function buyCourse(
 
     // const { currency, amount, id: orderId } = orderResponse.data.data;
 
-    console.log("Razorpay Key:", process.env.REACT_APP_RAZORPAY_KEY);
+    const razorpayKey = process.env.REACT_APP_RAZORPAY_KEY || "rzp_test_Re26A6Op9XE9P4";
+
     //options
     const options = {
-      key: process.env.REACT_APP_RAZORPAY_KEY,
+      key: razorpayKey,
       currency: orderResponse.data.data.currency,
       amount: `${orderResponse.data.data.amount}`,
       order_id: orderResponse.data.data.id,
