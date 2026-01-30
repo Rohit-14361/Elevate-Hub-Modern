@@ -8,7 +8,7 @@ const { passwordUpdated } = require("../mail/templates/passwordUpdate");
 const Profile = require("../models/Profile");
 require("dotenv").config();
 
-// Signup Controller for Registering USers
+// Signup Controller for Registering Users
 
 exports.signup = async (req, res) => {
   try {
@@ -21,22 +21,22 @@ exports.signup = async (req, res) => {
       confirmPassword,
       accountType,
       contactNumber,
-      otp,
     } = req.body;
+
     // Check if All Details are there or not
     if (
       !firstName ||
       !lastName ||
       !email ||
       !password ||
-      !confirmPassword ||
-      !otp
+      !confirmPassword
     ) {
       return res.status(403).send({
         success: false,
         message: "All Fields are required",
       });
     }
+
     // Check if password and confirm password match
     if (password !== confirmPassword) {
       return res.status(400).json({
@@ -52,23 +52,6 @@ exports.signup = async (req, res) => {
       return res.status(400).json({
         success: false,
         message: "User already exists. Please sign in to continue.",
-      });
-    }
-
-    // Find the most recent OTP for the email
-    const response = await OTP.find({ email }).sort({ createdAt: -1 }).limit(1);
-    console.log(response);
-    if (response.length === 0) {
-      // OTP not found for the email
-      return res.status(400).json({
-        success: false,
-        message: "The OTP is not valid",
-      });
-    } else if (otp !== response[0].otp) {
-      // Invalid OTP
-      return res.status(400).json({
-        success: false,
-        message: "The OTP is not valid",
       });
     }
 
@@ -97,11 +80,30 @@ exports.signup = async (req, res) => {
       accountType: accountType,
       approved: approved,
       additionalDetails: profileDetails._id,
-      image: "",
+      image: `https://api.dicebear.com/5.x/initials/svg?seed=${firstName} ${lastName}`,
     });
 
-    return res.status(200).json({
+    // Generate JWT token for auto-login
+    const token = jwt.sign(
+      { email: user.email, id: user._id, accountType: user.accountType },
+      process.env.JWT_SECRET,
+      {
+        expiresIn: "24h",
+      }
+    );
+
+    // Remove password from user object
+    user.password = undefined;
+
+    // Set cookie for token
+    const options = {
+      expires: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000),
+      httpOnly: true,
+    };
+
+    return res.cookie("token", token, options).status(200).json({
       success: true,
+      token,
       user,
       message: "User registered successfully",
     });
