@@ -3,6 +3,9 @@ const Section = require("../models/Section")
 const SubSection = require("../models/SubSection")
 const { uploadImageToCloudinary } = require("../utils/imageUploader")
 
+// File size limit: 100MB
+const MAX_FILE_SIZE = 100 * 1024 * 1024 // 100MB in bytes
+
 // Create a new sub-section for a given section
 exports.createSubSection = async (req, res) => {
   try {
@@ -16,6 +19,15 @@ exports.createSubSection = async (req, res) => {
         .status(404)
         .json({ success: false, message: "All Fields are Required" })
     }
+    
+    // Check file size
+    if (video.size > MAX_FILE_SIZE) {
+      return res.status(413).json({
+        success: false,
+        message: "File size is too large. Maximum size is 100MB."
+      })
+    }
+    
     console.log(video)
 
     // Upload the video file to Cloudinary
@@ -73,6 +85,15 @@ exports.updateSubSection = async (req, res) => {
     }
     if (req.files && req.files.video !== undefined) {
       const video = req.files.video
+      
+      // Check file size
+      if (video.size > MAX_FILE_SIZE) {
+        return res.status(413).json({
+          success: false,
+          message: "File size is too large. Maximum size is 100MB."
+        })
+      }
+      
       const uploadDetails = await uploadImageToCloudinary(
         video,
         process.env.FOLDER_NAME

@@ -100,7 +100,11 @@ export const addCourseDetails = async (data, token) => {
     result = response?.data?.data;
   } catch (error) {
     console.log("CREATE COURSE API ERROR............", error);
-    toast.error(error.message);
+    if (error.response?.status === 413) {
+      toast.error("File size is too large. Maximum size is 100MB.");
+    } else {
+      toast.error(error.response?.data?.message || error.message);
+    }
   }
   toast.dismiss(toastId);
   return result;
@@ -123,7 +127,11 @@ export const editCourseDetails = async (data, token) => {
     result = response?.data?.data;
   } catch (error) {
     console.log("EDIT COURSE API ERROR............", error);
-    toast.error(error.message);
+    if (error.response?.status === 413) {
+      toast.error("File size is too large. Maximum size is 100MB.");
+    } else {
+      toast.error(error.response?.data?.message || error.message);
+    }
   }
   toast.dismiss(toastId);
   return result;
@@ -167,7 +175,11 @@ export const createSubSection = async (data, token) => {
     result = response?.data?.data;
   } catch (error) {
     console.log("CREATE SUB-SECTION API ERROR............", error);
-    toast.error(error.message);
+    if (error.response?.status === 413) {
+      toast.error("File size is too large. Maximum size is 100MB.");
+    } else {
+      toast.error(error.response?.data?.message || error.message);
+    }
   }
   toast.dismiss(toastId);
   return result;
@@ -211,7 +223,11 @@ export const updateSubSection = async (data, token) => {
     result = response?.data?.data;
   } catch (error) {
     console.log("UPDATE SUB-SECTION API ERROR............", error);
-    toast.error(error.message);
+    if (error.response?.status === 413) {
+      toast.error("File size is too large. Maximum size is 100MB.");
+    } else {
+      toast.error(error.response?.data?.message || error.message);
+    }
   }
   toast.dismiss(toastId);
   return result;

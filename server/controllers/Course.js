@@ -6,6 +6,10 @@ const User = require("../models/User");
 const { uploadImageToCloudinary } = require("../utils/imageUploader");
 const CourseProgress = require("../models/CourseProgress");
 const { convertSecondsToDuration } = require("../utils/secToDuration");
+
+// File size limit: 100MB
+const MAX_FILE_SIZE = 100 * 1024 * 1024 // 100MB in bytes
+
 // Function to create a new course
 exports.createCourse = async (req, res) => {
   try {
@@ -52,6 +56,15 @@ exports.createCourse = async (req, res) => {
     if (!status || status === undefined) {
       status = "Draft";
     }
+
+    // Check file size
+    if (thumbnail.size > MAX_FILE_SIZE) {
+      return res.status(413).json({
+        success: false,
+        message: "File size is too large. Maximum size is 100MB."
+      });
+    }
+
     // Check if the user is an instructor
     const instructorDetails = await User.findById(userId, {
       accountType: "Instructor",
@@ -146,6 +159,15 @@ exports.editCourse = async (req, res) => {
     if (req.files) {
       console.log("thumbnail update");
       const thumbnail = req.files.thumbnailImage;
+      
+      // Check file size
+      if (thumbnail.size > MAX_FILE_SIZE) {
+        return res.status(413).json({
+          success: false,
+          message: "File size is too large. Maximum size is 100MB."
+        });
+      }
+      
       const thumbnailImage = await uploadImageToCloudinary(
         thumbnail,
         process.env.FOLDER_NAME
@@ -260,25 +282,25 @@ exports.getAllCourses = async (req, res) => {
 //       return res.status(400).json({
 //         success: false,
 //         message: `Could not find course with id: ${courseId}`,
-//       })
+//       });
 //     }
 
 //     if (courseDetails.status === "Draft") {
 //       return res.status(403).json({
 //         success: false,
 //         message: `Accessing a draft course is forbidden`,
-//       })
+//       });
 //     }
 
 //     return res.status(200).json({
 //       success: true,
 //       data: courseDetails,
-//     })
+//     });
 //   } catch (error) {
 //     return res.status(500).json({
 //       success: false,
 //       message: error.message,
-//     })
+//     });
 //   }
 // }
 exports.getCourseDetails = async (req, res) => {

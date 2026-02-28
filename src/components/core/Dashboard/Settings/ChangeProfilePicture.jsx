@@ -1,9 +1,13 @@
 import { useEffect, useRef, useState } from "react"
 import { FiUpload } from "react-icons/fi"
 import { useDispatch, useSelector } from "react-redux"
+import { toast } from "react-hot-toast"
 
 import { updateDisplayPicture } from "../../../../services/operations/SettingsAPI"
 import IconBtn from "../../../common/IconBtn"
+
+// File size limit: 100MB
+const MAX_FILE_SIZE = 100 * 1024 * 1024 // 100MB in bytes
 
 export default function ChangeProfilePicture() {
   const { token } = useSelector((state) => state.auth)
@@ -22,6 +26,13 @@ export default function ChangeProfilePicture() {
 
   const handleFileChange = (e) => {
     const file = e.target.files[0]
+    
+    // Check file size
+    if (file && file.size > MAX_FILE_SIZE) {
+      toast.error("File size is too large. Maximum size is 100MB.")
+      return
+    }
+    
     // console.log(file)
     if (file) {
       setImageFile(file)

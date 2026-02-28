@@ -2,9 +2,13 @@ import { useEffect, useRef, useState } from "react"
 import { useDropzone } from "react-dropzone"
 import { FiUploadCloud } from "react-icons/fi"
 import { useSelector } from "react-redux"
+import { toast } from "react-hot-toast"
 
 import "video-react/dist/video-react.css"
 import { Player } from "video-react"
+
+// File size limit: 100MB
+const MAX_FILE_SIZE = 100 * 1024 * 1024 // 100MB in bytes
 
 export default function Upload({
   name,
@@ -25,6 +29,13 @@ export default function Upload({
 
   const onDrop = (acceptedFiles) => {
     const file = acceptedFiles[0]
+    
+    // Check file size
+    if (file.size > MAX_FILE_SIZE) {
+      toast.error("File size is too large. Maximum size is 100MB.")
+      return
+    }
+    
     if (file) {
       previewFile(file)
       setSelectedFile(file)
@@ -36,6 +47,9 @@ export default function Upload({
       ? { "image/*": [".jpeg", ".jpg", ".png"] }
       : { "video/*": [".mp4"] },
     onDrop,
+    onDropRejected: () => {
+      toast.error("File size is too large. Maximum size is 100MB.")
+    },
   })
 
   const previewFile = (file) => {

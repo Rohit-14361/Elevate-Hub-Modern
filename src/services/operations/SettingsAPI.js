@@ -37,7 +37,11 @@ export function updateDisplayPicture(token, formData) {
       dispatch(setUser(response.data.data))
     } catch (error) {
       console.log("UPDATE_DISPLAY_PICTURE_API API ERROR............", error)
-      toast.error("Could Not Update Display Picture")
+      if (error.response?.status === 413) {
+        toast.error("File size is too large. Maximum size is 100MB.")
+      } else {
+        toast.error("Could Not Update Display Picture")
+      }
     }
     toast.dismiss(toastId)
   }

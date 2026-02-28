@@ -131,7 +131,8 @@ export default function CoursesTable({ courses, setCourses }) {
                         text1: "Do you want to delete this course?",
                         text2:
                           "All the data related to this course will be deleted",
-                        btn1Text: !loading ? "Delete" : "Loading...  ",
+                        btn1Text: !loading ? "Delete" : "Loading...",
+                        btn2Text: "Cancel",
                         btn1Handler: !loading
                           ? () => handleCourseDelete(course._id)
                           : () => {},
@@ -149,7 +150,7 @@ export default function CoursesTable({ courses, setCourses }) {
                     disabled={loading}
                     onClick={() => dispatch(addToCart(course))}
                     title="Add to Cart"
-                    className="ml-4 rounded bg-yellow-500 px-3 py-1 text-sm font-semibold text-richblack-900 transition hover:bg-yellow-600"
+                    className="ml-4 rounded bg-yellow-500 px-3 py-1 text-sm font-semibold text-white transition hover:bg-yellow-600"
                   >
                     Add to Cart
                   </button>

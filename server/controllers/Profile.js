@@ -6,6 +6,10 @@ const User = require("../models/User");
 const { uploadImageToCloudinary } = require("../utils/imageUploader");
 const mongoose = require("mongoose");
 const { convertSecondsToDuration } = require("../utils/secToDuration");
+
+// File size limit: 100MB
+const MAX_FILE_SIZE = 100 * 1024 * 1024 // 100MB in bytes
+
 // Method for updating a profile
 exports.updateProfile = async (req, res) => {
   try {
@@ -118,6 +122,15 @@ exports.getAllUserDetails = async (req, res) => {
 exports.updateDisplayPicture = async (req, res) => {
   try {
     const displayPicture = req.files.displayPicture;
+    
+    // Check file size
+    if (displayPicture.size > MAX_FILE_SIZE) {
+      return res.status(413).json({
+        success: false,
+        message: "File size is too large. Maximum size is 100MB."
+      });
+    }
+    
     const userId = req.user.id;
     const image = await uploadImageToCloudinary(
       displayPicture,
